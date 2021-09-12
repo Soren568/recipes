@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+
+</head>
+
+<body>
+    <div class="container p-3">
+        <div class="d-flex align-items-center mb-5">
+            <h1 class="me-auto">Add New Recipe</h1>
+            <a href="/dashboard" class="btn btn-outline-primary ms-5">Dashboard</a>
+            <a href="#" class="btn btn-outline-danger ms-2">Log out</a>
+        </div>
+        <div class="width-auto">
+            <form action="/recipe/save" method="post" class="row">
+                <div class="col">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" name="name" id="name" class="form-control mb-3">
+                    {% for message in get_flashed_messages(category_filter=["name"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <label for="description" class="form-label">Description:</label>
+                    <textarea type="text" name="description" id="description" class="form-control mb-3"
+                        rows="3"></textarea>
+                    {% for message in get_flashed_messages(category_filter=["description"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <label for="instructions" class="form-label">Instructions:</label>
+                    <textarea type="text" name="instructions" id="instructions" class="form-control mb-3"
+                        rows="3"></textarea>
+                    {% for message in get_flashed_messages(category_filter=["instructions"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                </div>
+                <div class="col d-flex flex-column">
+                    <label for="created_at" class="form-label">Date Made On:</label>
+                    <input type="date" name="created_at" id="created_at" class="mb-3">
+                    <label for="time" class="form-label">Under 30 Minutes?</label>
+                    <div class="d-inline-flex mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="time" id="time1" value="1">
+                            <label class="form-check-label me-3" for="time1">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="time" id="time2" value="0"checked>
+                            <label class="form-check-label" for="time2">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="user_id" value="{{session['user_id']}}">
+                    <button class="btn btn-success">Add Recipe!</button>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

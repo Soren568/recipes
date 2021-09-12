@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipes Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+
+</head>
+
+<body>
+    <div class="container p-3">
+        <div class="d-flex align-items-center">
+            <h1 class="me-auto">Welcome {{active_user.first_name}}!</h1>
+            <a href="/recipe/create" class="btn btn-outline-primary ms-5">Create Recipe</a>
+            <a href="/logout" class="btn btn-outline-danger ms-2">Log out</a>
+        </div>
+        {% for message in get_flashed_messages(category_filter=["recipe_added"]) %}
+            <p class="alert alert-success">{{message}}</p>
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["recipe_update"]) %}
+            <p class="alert alert-success">{{message}}</p>
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["recipe_delete"]) %}
+            <p class="alert alert-warning">{{message}}</p>
+        {% endfor %}
+        <div>
+            <table class="table caption-top table-striped">
+                <caption>Here are the recipes: </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Under 30 Minutes?</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <!-- Recipe.time not adjusting? Code is the same as individual recipe info page but works there -->
+                <tbody>
+                    {% for recipe in recipes %}
+                        <tr>
+                            <td>{{recipe.id}}</td>
+                            <td>{{recipe.name}}</td>
+                            <td>
+                                {% if recipe.time == 0 %}
+                                No
+                                {% else %}
+                                Yes
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="/recipe/info/{{recipe.id}}" class="btn btn-outline-dark">Instructions</a>
+                                    {% if recipe.user_id == session['user_id'] %}
+                                    <a href="/recipe/edit/{{recipe.id}}" class="btn btn-outline-dark">Edit</a>
+                                    <a href="/recipe/delete/{{recipe.id}}" class="btn btn-outline-dark">Delete</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

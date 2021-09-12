@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Info.</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/style.css') }}">
+
+</head>
+
+<body>
+    <div class="container p-3">
+        <div class="d-flex align-items-center mb-5">
+            <h1 class="me-auto">Recipes</h1>
+            <a href="/dashboard" class="btn btn-outline-primary ms-5">Dashboard</a>
+            <a href="/recipe/create" class="btn btn-outline-primary ms-2">Create Recipe</a>
+            <a href="/logout" class="btn btn-outline-danger ms-2">Log out</a>
+        </div>
+        <!-- Refer to Description lists in Bootstrap -->
+        <div>
+            <h2>{{recipe.name}}</h2>
+            <div class="card p-4">
+                <dl class="row">
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9 mb-4">{{recipe.description}}</dd>
+                    
+                    <dt class="col-sm-3">Under 30 minutes?</dt>
+                    <dd class="col-sm-9 mb-4">
+                        {% if recipe.time == 0 %}
+                        No
+                        {% else %}
+                        Yes
+                        {% endif %}
+                    </dd>
+
+                    <dt class="col-sm-3">Instructions</dt>
+                    <dd class="col-sm-9 mb-4"> {{recipe.instructions}}</dd>
+
+                    <dt class="col-sm-3">Date Created: </dt>
+                    <dd class="col-sm-9">{{recipe.created_at.strftime("%A - %B %-d, %Y")}}</dd>
+
+
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
