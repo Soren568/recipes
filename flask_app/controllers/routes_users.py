@@ -26,6 +26,8 @@ def login():
     session['user_id'] = user_data["id"]
     return redirect('/login/success')
 
+# Check better done before redirection - dashboard would check to see if id in session
+# less requests = better
 @app.route('/login/success')
 def login_success():
     active_user = User.get_by_id({"id":session['user_id']})

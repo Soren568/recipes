@@ -60,10 +60,7 @@
             <!-- LOGIN -->
             <div class="col right">
                 <h1>Login</h1>
-                {% for message in get_flashed_messages(category_filter=["email_not_found"]) %}
-                <p class="alert alert-danger">{{message}}</p>
-                {% endfor %}
-                {% for message in get_flashed_messages(category_filter=["pw"]) %}
+                {% for message in get_flashed_messages(category_filter=["email_not_found","pw"]) %}
                 <p class="alert alert-danger">{{message}}</p>
                 {% endfor %}
                 <form action="/login" method="post">

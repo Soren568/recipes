@@ -24,8 +24,6 @@ class User:
 
 # ================================= VALIDATE =================================
     # Move this email regex to the top for clarity
-    EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
-    
     
     @staticmethod
     def validate_user(user):
@@ -37,8 +35,7 @@ class User:
             is_valid = False
 
         # email check - works
-        e_query = "SELECT * FROM users WHERE email = %(email)s"
-        e_results = connectToMySQL(DB).query_db(e_query,user)
+        e_results = User.get_by_email(user)
         if len(e_results) > 0:
             flash("Email already registered.", "email")
             is_valid = False
@@ -62,7 +59,7 @@ class User:
         if len(results) < 1:
             return False
         return results[0]
-
+# Could combine get_by_email and get_by_id using if check/ **kwargs/ could do for all columns
 # Used for session login
     @classmethod
     def get_by_id(cls, data):

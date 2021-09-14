@@ -19,14 +19,8 @@
             <a href="/recipe/create" class="btn btn-outline-primary ms-5">Create Recipe</a>
             <a href="/logout" class="btn btn-outline-danger ms-2">Log out</a>
         </div>
-        {% for message in get_flashed_messages(category_filter=["recipe_added"]) %}
+        {% for message in get_flashed_messages(category_filter=["recipe_added", "recipe_update", "recipe_delete"]) %}
             <p class="alert alert-success">{{message}}</p>
-        {% endfor %}
-        {% for message in get_flashed_messages(category_filter=["recipe_update"]) %}
-            <p class="alert alert-success">{{message}}</p>
-        {% endfor %}
-        {% for message in get_flashed_messages(category_filter=["recipe_delete"]) %}
-            <p class="alert alert-warning">{{message}}</p>
         {% endfor %}
         <div>
             <table class="table caption-top table-striped">
@@ -46,11 +40,8 @@
                             <td>{{recipe.id}}</td>
                             <td>{{recipe.name}}</td>
                             <td>
-                                {% if recipe.time == 0 %}
-                                No
-                                {% else %}
-                                Yes
-                                {% endif %}
+                                <!-- inline conditional expression/in js called ternary operator (?) -->
+                                {{"No" if recipe.time == 0 else "Yes"}}
                             </td>
                             <td>
                                 <div class="btn-group" role="group">

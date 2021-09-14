@@ -8,6 +8,7 @@ class Recipe:
         self.name = data['name']
         self.description = data['description']
         self.instructions = data['instructions']
+        # seperate self.date_made_at
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
         self.user_id = data['user_id']
@@ -32,7 +33,9 @@ class Recipe:
         result = connectToMySQL(DB).query_db(query, data)
         print(result)
         print(result[0])
-        return result[0]
+        if result:
+            return cls(result[0])
+        # make sure result is truthy in most methods
 
     @staticmethod
     def validate_recipe(recipe):
@@ -43,12 +46,16 @@ class Recipe:
             is_valid = False
 
         if len(recipe['description']) < 10:
-            flash("Please enter a description for the recipe.", 'description')
+            flash("Please enter a description for the recipe longer than 10 characters.", 'description')
             is_valid = False
 
         if len(recipe['instructions']) < 10:
-            flash("Please give some instructions to help others.", 'instructions')
+            flash("Please give some instructions to help others longer than 10 characters.", 'instructions')
             is_valid = False
+
+        # validate date_made w/ length > 0 BOOLEANS VALIDATION
+        # check to see if under-30 in recipe
+        # under_30 should be validated for value != 0, 1
 
         return is_valid
 
@@ -59,5 +66,5 @@ class Recipe:
 
     @classmethod
     def update(cls,data):
-        query = "UPDATE recipes SET name=%(name)s,description=%(description)s,instructions=%(instructions)s, time=%(time)s, updated_at=NOW() WHERE id = %(id)s;"
+        query = "UPDATE recipes SET name=%(name)s,description=%(description)s,instructions=%(instructions)s, time=%(time)s WHERE id = %(id)s;"
         return connectToMySQL(DB).query_db(query,data)

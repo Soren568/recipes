@@ -8,6 +8,7 @@ bcrypt=Bcrypt(app)
 @app.route('/recipe/create')
 def create_recipe_page():
     return render_template("add.html", active_user = User.get_by_id({"id":session['user_id']}))
+# custom decorator to reduce active_user
 
 @app.route('/recipe/save', methods=["POST"])
 def save_recipe():
@@ -27,12 +28,14 @@ def edit_recipe(id):
 
 @app.route('/recipe/update', methods=["POST"])
 def update_recipe():
+    # check to see if user editing is the logged in user - all done outside of through the browser
     Recipe.update(request.form)
     flash("Recipe updated!", "recipe_update")
     return redirect('/dashboard')
 
 @app.route('/recipe/delete/<int:id>')
 def delete_recipe(id):
+    # check to see if user = logged in and if logged in user = user that created recipe
     Recipe.delete({"id": id})
     flash("Recipe deleted!", "recipe_delete")
     return redirect('/dashboard')

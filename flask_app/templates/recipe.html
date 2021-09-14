@@ -30,11 +30,7 @@
                     
                     <dt class="col-sm-3">Under 30 minutes?</dt>
                     <dd class="col-sm-9 mb-4">
-                        {% if recipe.time == 0 %}
-                        No
-                        {% else %}
-                        Yes
-                        {% endif %}
+                        {{"Yes" if recipe.time else "No"}}
                     </dd>
 
                     <dt class="col-sm-3">Instructions</dt>
