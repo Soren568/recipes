@@ -44,10 +44,12 @@ class User:
             is_valid = False
         elif not EMAIL_REGEX.match(user['email']):
             flash("Invalid email input.", "email")
+            is_valid = False
 
         # Password confirmation check
         if not PW_REGEX.match(user['password']):
             flash("Password does not meet criteria. Please follow given instructions.", "pw_length")
+            is_valid = False
         if user['password'] != user['pw_confirm']:
             flash("Passwords did not match.", "pw_confirm")
             is_valid = False
