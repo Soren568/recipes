@@ -21,7 +21,7 @@
         </div>
         <!-- NOTE: To prepopulate form - change the value of the input box (unless text area) -->
         <div class="width-auto">
-            <form action="/recipe/update" method="post" class="row">
+            <form action="/recipe/update/{{recipe.id}}" method="post" class="row">
                 <div class="col">
                     <label for="name" class="form-label">Name:</label>
                     <input type="text" name="name" id="name" class="form-control mb-3" value="{{recipe.name}}">
@@ -42,8 +42,11 @@
                     {% endfor %}
                 </div>
                 <div class="col d-flex flex-column">
-                    <label for="created_at" class="form-label">Date Made On:</label>
-                    <input type="date" name="created_at" id="created_at" class="mb-3" value={{recipe.created_at}}>
+                    {% for message in get_flashed_messages(category_filter=["bad_date"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
+                    <label for="made_on" class="form-label">Date Made On:</label>
+                    <input type="date" name="made_on" id="made_on" class="mb-3" value={{recipe.made_on}}>
                     <label for="time" class="form-label">Under 30 Minutes?</label>
                     <div class="d-inline-flex mb-3">
                         <div class="form-check">

@@ -16,26 +16,13 @@ def home():
 @app.route('/login', methods=['POST'])
 def login():
     user_data = User.get_by_email(request.form)
-    print(user_data)
     if not user_data:
         flash("Email not found.", "email_not_found")
         return redirect('/')
-    if not bcrypt.check_password_hash(user_data["password"], request.form['password']):
+    if not bcrypt.check_password_hash(user_data.password, request.form['password']):
         flash("Incorrect password.", "pw")
         return redirect('/')
-    session['user_id'] = user_data["id"]
-    return redirect('/login/success')
-
-# Check better done before redirection - dashboard would check to see if id in session
-# less requests = better
-@app.route('/login/success')
-def login_success():
-    active_user = User.get_by_id({"id":session['user_id']})
-    if active_user == False:
-        flash("Something went wrong with the id.", "bad_id")
-        return redirect('/')
-    
-    print(active_user)
+    session['user_id'] = user_data.id
     return redirect('/dashboard')
 
 @app.route('/user/register', methods=["POST"])
@@ -57,7 +44,6 @@ def register():
         User.save(data)
         flash("Account created! Please login with your credentials.", "success")
         return redirect('/')
-
 
 @app.route('/logout')
 def clear_session():

@@ -1,5 +1,6 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
+from datetime import datetime
 DB = "recipes_schema"
 
 class Recipe:
@@ -8,7 +9,8 @@ class Recipe:
         self.name = data['name']
         self.description = data['description']
         self.instructions = data['instructions']
-        # seperate self.date_made_at
+        self.time = data['time']
+        self.made_on = data['made_on']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
         self.user_id = data['user_id']
@@ -31,11 +33,9 @@ class Recipe:
     def get_by_id(cls, data):
         query = "SELECT * FROM recipes WHERE id = %(id)s;"
         result = connectToMySQL(DB).query_db(query, data)
-        print(result)
-        print(result[0])
         if result:
             return cls(result[0])
-        # make sure result is truthy in most methods
+        
 
     @staticmethod
     def validate_recipe(recipe):
@@ -66,5 +66,5 @@ class Recipe:
 
     @classmethod
     def update(cls,data):
-        query = "UPDATE recipes SET name=%(name)s,description=%(description)s,instructions=%(instructions)s, time=%(time)s WHERE id = %(id)s;"
+        query = "UPDATE recipes SET name=%(name)s,description=%(description)s,instructions=%(instructions)s, time=%(time)s, made_on=%(made_on)s WHERE id = %(id)s;"
         return connectToMySQL(DB).query_db(query,data)

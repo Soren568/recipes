@@ -21,23 +21,23 @@ class User:
         query = "INSERT INTO users(first_name, last_name, email, password) VALUES (%(first_name)s,%(last_name)s, %(email)s,%(password)s);"
         return connectToMySQL(DB).query_db(query, data)
 
-
 # ================================= VALIDATE =================================
-    # Move this email regex to the top for clarity
     
     @staticmethod
     def validate_user(user):
         is_valid = True
         
-        # Name check - works
+        # Name check
         if len(user['first_name']) < 1 or len(user['last_name']) < 1:
             flash("Please enter your name.", 'name')
             is_valid = False
 
-        # email check - works
-        e_results = User.get_by_email(user)
-        if len(e_results) > 0:
+        # email check
+        e_results = User.get_by({"email":user['email']})
+        print(e_results)
+        if e_results:
             flash("Email already registered.", "email")
+            print("test")
             is_valid = False
         elif not EMAIL_REGEX.match(user['email']):
             flash("Invalid email input.", "email")
@@ -52,20 +52,25 @@ class User:
             is_valid = False
         return is_valid
 
-    @staticmethod
-    def get_by_email(user):
+    @classmethod
+    def get_by_email(cls, user):
         query = "SELECT * FROM users WHERE email = %(email)s"
         results = connectToMySQL(DB).query_db(query,user)
-        if len(results) < 1:
-            return False
-        return results[0]
-# Could combine get_by_email and get_by_id using if check/ **kwargs/ could do for all columns
-# Used for session login
+        if results:
+            return cls(results[0])
+
     @classmethod
     def get_by_id(cls, data):
         query = "SELECT * FROM users WHERE id = %(id)s;"
         print("test", data)
         results = connectToMySQL(DB).query_db(query, data)
-        if not results:
-            return False
-        return cls(results[0])
+        if results:
+            return cls(results[0])
+
+    @classmethod
+    def get_by(cls, user):
+        where = " AND ".join(f"{key} = %({key})s" for key in user)
+        query = "SELECT * FROM users WHERE " + where
+        result = connectToMySQL(DB).query_db(query, user)
+        if result:
+            return cls(result[0])

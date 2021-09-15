@@ -22,6 +22,9 @@
         {% for message in get_flashed_messages(category_filter=["recipe_added", "recipe_update", "recipe_delete"]) %}
             <p class="alert alert-success">{{message}}</p>
         {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["bad_edit"]) %}
+            <p class="alert alert-danger">{{message}}</p>
+        {% endfor %}
         <div>
             <table class="table caption-top table-striped">
                 <caption>Here are the recipes: </caption>
@@ -40,8 +43,9 @@
                             <td>{{recipe.id}}</td>
                             <td>{{recipe.name}}</td>
                             <td>
+                                {{"Yes" if recipe.time else "No"}}
                                 <!-- inline conditional expression/in js called ternary operator (?) -->
-                                {{"No" if recipe.time == 0 else "Yes"}}
+                                
                             </td>
                             <td>
                                 <div class="btn-group" role="group">
