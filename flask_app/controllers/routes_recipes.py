@@ -29,7 +29,7 @@ def create_recipe_page():
 @app.route('/recipe/save', methods=["POST"])
 def save_recipe():
     # Ensures page cannot be accessed w/o session (created on login)
-    if not session:
+    if "user_id" not in session:
         return redirect('/')
     if not Recipe.validate_recipe(**request.form):
         return redirect('/recipe/create')
@@ -41,7 +41,7 @@ def save_recipe():
 # # ================================== Display Info Template (render) ===============================
 @app.route('/recipe/info/<int:id>')
 def show_recipe(id):
-    if not session:
+    if "user_id" not in session:
         return redirect('/')
     return render_template("recipe.html", recipe = Recipe.get_by_id({"id":id}))
 # ==========================================================================================
@@ -49,7 +49,7 @@ def show_recipe(id):
 # ========================== Edit/Update pages (render/post) ===============================
 @app.route('/recipe/edit/<int:id>')
 def edit_recipe(id):
-    if not session:
+    if "user_id" not in session:
         return redirect('/')
     recipe = Recipe.get_by_id({"id":id})
     print(session['user_id'], ",",recipe.user_id)
@@ -60,7 +60,7 @@ def edit_recipe(id):
 
 @app.route('/recipe/update/<int:id>', methods=["POST", "GET"])
 def update_recipe(id):
-    if not session:
+    if "user_id" not in session:
         return redirect('/')
     recipe = Recipe.get_by_id({"id":id})
     if session['user_id'] != recipe.user_id:
@@ -77,7 +77,7 @@ def update_recipe(id):
 # ========================== Delete page (button click) ===============================
 @app.route('/recipe/delete/<int:id>')
 def delete_recipe(id):
-    if not session:
+    if "user_id" not in session:
         return redirect('/')
     # check to see if user = logged in and if logged in user = user that created recipe
     if session['user_id'] != Recipe.get_by_id({"id":id}).user_id:
