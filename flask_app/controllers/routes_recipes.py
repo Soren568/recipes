@@ -6,34 +6,47 @@ from flask_bcrypt import Bcrypt
 from datetime import date, datetime
 bcrypt=Bcrypt(app)
 
+@app.route('/dashboard')
+def recipe_dashboard():
+    if "user_id" not in session:
+        return redirect('/')
+    context = {
+        "active_user": User.get_by_id({"id":session['user_id']}),
+        "recipes": Recipe.get_all()
+    }
+    return render_template("dashboard.html", **context)
+    
+# ========================== Create/Save pages (render/post) ===============================
 @app.route('/recipe/create')
 def create_recipe_page():
-    # Validates that session id is correct
     if not User.get_by({"id":session['user_id']}):
         flash("Something went wrong with the id.", "bad_id")
         return redirect('/')
     if not session:
         return redirect('/')
     return render_template("add.html", active_user = User.get_by_id({"id":session['user_id']}))
-# custom decorator to reduce active_user
 
 @app.route('/recipe/save', methods=["POST"])
 def save_recipe():
     # Ensures page cannot be accessed w/o session (created on login)
     if not session:
         return redirect('/')
-    if not Recipe.validate_recipe(request.form):
+    if not Recipe.validate_recipe(**request.form):
         return redirect('/recipe/create')
     Recipe.save(request.form)
     flash(f"{request.form['name']} added to recipes list! Thanks for your contribution to ending world hunger.", "recipe_added")
     return redirect('/dashboard')
+# ===========================================================================================
 
+# # ================================== Display Info Template (render) ===============================
 @app.route('/recipe/info/<int:id>')
 def show_recipe(id):
     if not session:
         return redirect('/')
     return render_template("recipe.html", recipe = Recipe.get_by_id({"id":id}))
+# ==========================================================================================
 
+# ========================== Edit/Update pages (render/post) ===============================
 @app.route('/recipe/edit/<int:id>')
 def edit_recipe(id):
     if not session:
@@ -49,7 +62,6 @@ def edit_recipe(id):
 def update_recipe(id):
     if not session:
         return redirect('/')
-    # check to see if user editing is the logged in user - all done outside of through the browser
     recipe = Recipe.get_by_id({"id":id})
     if session['user_id'] != recipe.user_id:
         flash("Your not allowed in there.", "bad_edit")
@@ -60,7 +72,9 @@ def update_recipe(id):
     Recipe.update(request.form)
     flash("Recipe updated!", "recipe_update")
     return redirect('/dashboard')
+# ============================================================================================
 
+# ========================== Delete page (button click) ===============================
 @app.route('/recipe/delete/<int:id>')
 def delete_recipe(id):
     if not session:
@@ -72,9 +86,4 @@ def delete_recipe(id):
     Recipe.delete({"id": id})
     flash("Recipe deleted!", "recipe_delete")
     return redirect('/dashboard')
-
-@app.route('/dashboard')
-def recipe_dashboard():
-    if not session:
-        return redirect('/')
-    return render_template("dashboard.html", active_user = User.get_by_id({"id":session['user_id']}), recipes = Recipe.get_all())
+# ===========================================================================================

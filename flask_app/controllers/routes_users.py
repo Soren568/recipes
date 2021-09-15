@@ -13,6 +13,7 @@ def index():
 def home():
     return render_template("index.html")
 
+# =========================== Login/Logout ==========================
 @app.route('/login', methods=['POST'])
 def login():
     user_data = User.get_by_email(request.form)
@@ -25,6 +26,14 @@ def login():
     session['user_id'] = user_data.id
     return redirect('/dashboard')
 
+@app.route('/logout')
+def clear_session():
+    session.clear()
+    flash("You are logged out. Have a good day!", "logout")
+    return redirect('/')
+# ==================================================================
+
+# ======================= Registration =======================
 @app.route('/user/register', methods=["POST"])
 def register():
     # Form validation
@@ -41,15 +50,14 @@ def register():
             "password": pw_hash,
         }
         print(data)
-        User.save(data)
-        flash("Account created! Please login with your credentials.", "success")
+        user_save = User.save(data)
+        if user_save:
+            flash("Account created! Please login with your credentials.", "success")
+        else:
+            flash("something went wrong", "success")
         return redirect('/')
+# ============================================================
 
-@app.route('/logout')
-def clear_session():
-    session.clear()
-    flash("You are logged out. Have a good day!", "logout")
-    return redirect('/')
 
 
 

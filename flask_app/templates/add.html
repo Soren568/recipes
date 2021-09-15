@@ -43,6 +43,9 @@
                 <div class="col d-flex flex-column">
                     <label for="made_on" class="form-label">Date Made On:</label>
                     <input type="date" name="made_on" id="made_on" class="mb-3">
+                    {% for message in get_flashed_messages(category_filter=["made_on"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
                     <label for="time" class="form-label">Under 30 Minutes?</label>
                     <div class="d-inline-flex mb-3">
                         <div class="form-check">
@@ -52,12 +55,15 @@
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="time" id="time2" value="0"checked>
+                            <input class="form-check-input" type="radio" name="time" id="time2" value="0">
                             <label class="form-check-label" for="time2">
                                 No
                             </label>
                         </div>
                     </div>
+                    {% for message in get_flashed_messages(category_filter=["time"]) %}
+                        <p class="alert alert-danger">{{message}}</p>
+                    {% endfor %}
                     <input type="hidden" name="user_id" value="{{session['user_id']}}">
                     <button class="btn btn-success">Add Recipe!</button>
                 </div>

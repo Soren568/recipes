@@ -38,7 +38,8 @@ class Recipe:
         
 
     @staticmethod
-    def validate_recipe(recipe):
+    def validate_recipe(**recipe):
+        print(recipe)
         is_valid = True
 
         if len(recipe['name']) < 4:
@@ -53,9 +54,18 @@ class Recipe:
             flash("Please give some instructions to help others longer than 10 characters.", 'instructions')
             is_valid = False
 
-        # validate date_made w/ length > 0 BOOLEANS VALIDATION
-        # check to see if under-30 in recipe
-        # under_30 should be validated for value != 0, 1
+        if not recipe['made_on']:
+            flash("Please put when you made this dish.", 'made_on')
+            is_valid = False
+
+        # "KeyError 'time'" with no try/except catching
+        try:
+            if(recipe['time'] != [0,1]):
+                flash("Please enter a time to cook.", 'time')
+                is_valid = False
+        except:
+            flash("Please enter a time to cook.", 'time')
+            is_valid = False
 
         return is_valid
 
